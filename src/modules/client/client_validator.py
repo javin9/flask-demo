@@ -1,8 +1,9 @@
-from wtforms import IntegerField, StringField, validators
-from wtforms.validators import DataRequired, Length
+from wtforms import IntegerField, StringField, ValidationError, validators
+from wtforms.validators import DataRequired, Length, Regexp, Email
 from flask_wtf import FlaskForm
 
 from src.enums.client import ClientTypeEnum
+from src.models.user import User
 
 
 class ClientForm(FlaskForm):
@@ -18,7 +19,6 @@ class ClientForm(FlaskForm):
     secret = StringField('secret', validators=[])
 
     # 客户端类型
-    # https://wtforms.readthedocs.io/en/3.1.x/validators/#custom-validators
     category = IntegerField('category', validators=[DataRequired()])
 
     # 自定义验证器
@@ -28,3 +28,26 @@ class ClientForm(FlaskForm):
         except ValueError as e:
             raise e
         # raise ValueError('client type is wrong')
+
+
+class UserEmailForm(ClientForm):
+    nickname = StringField('nickname',
+                           validators=[DataRequired(),
+                                       Length(min=2, max=22)])
+
+    account = StringField(
+        'email',
+        validators=[DataRequired(),
+                    Email(message='invalidate email')])
+
+    # 自定义验证器 校验用户是否存在
+    def validate_account(self, field):
+        # field.data
+        user = User.query.filter_by(email=field.data).first()
+        if user:
+            raise ValidationError('用户已经存在')
+
+    secret = StringField(
+        'secret',
+        validators=[DataRequired(),
+                    Regexp(r'^[A-Za-z0-9_*&$#@]{6,22}$')])

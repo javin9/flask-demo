@@ -5,6 +5,7 @@
 - [flask-restful](https://flask-restful.readthedocs.io/en/latest/quickstart.html)
 - [Flask-WTF](https://wizardforcel.gitbooks.io/flask-extension-docs/content/flask-wtf.html)
 - [poetry](https://python-poetry.org/docs/cli/#config)
+- [Python 进阶：With 语句和上下文管理器 ContextManager](https://zhuanlan.zhihu.com/p/24709718)
 
 ### TODO
 
