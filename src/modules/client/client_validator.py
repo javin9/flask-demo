@@ -3,6 +3,7 @@ from wtforms.validators import DataRequired, Length, Regexp
 
 from src.enums.client import ClientTypeEnum
 from src.libs.base_validator import BaseForm
+from src.libs.error_code import ClientTypeError, ParameterException
 from src.models.user import User
 
 from email_validator import validate_email, EmailNotValidError
@@ -22,7 +23,8 @@ class ClientForm(BaseForm):
         try:
             ClientTypeEnum(field.data)
         except ValueError as e:
-            raise e
+            print(e)
+            raise ClientTypeError()
 
         # self.category.data = client
 
