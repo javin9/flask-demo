@@ -1,20 +1,16 @@
 from wtforms import IntegerField, StringField, ValidationError, validators
-from wtforms.validators import DataRequired, Length, Regexp, Email
-from flask_wtf import FlaskForm
+from wtforms.validators import DataRequired, Length, Regexp
 
 from src.enums.client import ClientTypeEnum
+from src.libs.base_validator import BaseForm
 from src.models.user import User
 
+from email_validator import validate_email, EmailNotValidError
 
-class ClientForm(FlaskForm):
+
+class ClientForm(BaseForm):
     # 账号
-    account = StringField('account',
-                          validators=[
-                              DataRequired(),
-                              Length(min=6,
-                                     max=20,
-                                     message="字符个数需要在{}和{}之间".format(5, 30))
-                          ])
+    account = StringField('account', validators=[DataRequired("账号不能为空")])
     # 密码
     secret = StringField('secret', validators=[])
 
@@ -27,7 +23,8 @@ class ClientForm(FlaskForm):
             ClientTypeEnum(field.data)
         except ValueError as e:
             raise e
-        # raise ValueError('client type is wrong')
+
+        # self.category.data = client
 
 
 class UserEmailForm(ClientForm):
@@ -35,19 +32,31 @@ class UserEmailForm(ClientForm):
                            validators=[DataRequired(),
                                        Length(min=2, max=22)])
 
-    account = StringField(
-        'email',
-        validators=[DataRequired(),
-                    Email(message='invalidate email')])
+    account = StringField('email', validators=[DataRequired()])
 
-    # 自定义验证器 校验用户是否存在
     def validate_account(self, field):
-        # field.data
-        user = User.query.filter_by(email=field.data).first()
-        if user:
-            raise ValidationError('用户已经存在')
+        try:
+            email_information = validate_email(field.data,
+                                               check_deliverability=False)
+            email = email_information.normalized
+            try:
+                user = User.query.filter_by(email=email).first()
+                if user:
+                    raise ValidationError('用户已经存在')
+            except ValidationError as e:
+                raise e
+        except EmailNotValidError as e:
+            raise e
 
-    secret = StringField(
-        'secret',
-        validators=[DataRequired(),
-                    Regexp(r'^[A-Za-z0-9_*&$#@]{6,22}$')])
+    # # 自定义验证器 校验用户是否存在
+    # def validate_account(self, field):
+    #     # field.data
+    #     user = User.query.filter_by(email=field.data).first()
+    #     if user:
+    #         raise ValidationError('用户已经存在')
+
+    # secret = StringField(
+    #     'secret',
+    #     validators=[DataRequired(),
+    #                 Regexp(r'^[A-Za-z0-9_*&$#@]{6,22}$')])
+    secret = StringField('secret', validators=[DataRequired()])

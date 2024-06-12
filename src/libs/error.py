@@ -14,16 +14,17 @@ class APIException(HTTPException):
             self.error_code = error_code
         if msg:
             self.msg = msg
-        super(APIException, self).__init__(msg, None)
+        super().__init__(msg, None)
 
-    def get_body(self, environ=None):
+    def get_body(self, environ=None, scope=None):
         body = dict(msg=self.msg,
+                    code=self.code,
                     error_code=self.error_code,
                     request=request.method + ' ' + self.get_url_no_param())
         text = json.dumps(body)
         return text
 
-    def get_headers(self, environ=None):
+    def get_headers(self, environ=None, scope=None):
         """Get a list of headers."""
         return [('Content-Type', 'application/json')]
 

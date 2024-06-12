@@ -1,6 +1,7 @@
 from datetime import datetime
 
-from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy, BaseQuery
+from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy
+from flask_sqlalchemy.query import Query as BaseQuery
 from sqlalchemy import inspect, Column, Integer, SmallInteger, orm
 from contextlib import contextmanager
 

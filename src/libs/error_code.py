@@ -1,10 +1,10 @@
 from werkzeug.exceptions import HTTPException
 
-from app.libs.error import APIException
+from src.libs.error import APIException
 
 
 class Success(APIException):
-    code = 201
+    code = 0
     msg = 'ok'
     error_code = 0
 
@@ -34,6 +34,11 @@ class ParameterException(APIException):
     code = 400
     msg = 'invalid parameter'
     error_code = 1000
+
+    def __init__(self, msg=None, code=None, error_code=None, headers=None):
+        if msg:
+            self.msg = msg
+        super().__init__(msg, code, error_code, headers)
 
 
 class NotFound(APIException):
