@@ -34,7 +34,7 @@ class UserEmailForm(ClientForm):
                            validators=[DataRequired(),
                                        Length(min=2, max=22)])
 
-    account = StringField('email', validators=[DataRequired()])
+    account = StringField('account', validators=[DataRequired()])
 
     def validate_account(self, field):
         try:

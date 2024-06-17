@@ -46,11 +46,23 @@ class NotFound(APIException):
     msg = 'the resource are not found O__O...'
     error_code = 1001
 
+    def __init__(self, msg=None, code=None, error_code=None, headers=None):
+        if msg:
+            self.msg = msg
+        super().__init__(msg, code, error_code, headers)
+
 
 class AuthFailed(APIException):
     code = 401
     error_code = 1005
     msg = 'authorization failed'
+
+    def __init__(self, msg=None, code=None, error_code=None):
+        if msg:
+            self.msg = msg
+        if code:
+            self.code = code
+        super().__init__(msg, code, error_code)
 
 
 class Forbidden(APIException):

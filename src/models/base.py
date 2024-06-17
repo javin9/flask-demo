@@ -54,6 +54,9 @@ class Base(db.Model):
     def __getitem__(self, item):
         return getattr(self, item)
 
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
     @property
     def create_datetime(self):
         if self.create_time:
