@@ -25,6 +25,8 @@
 - 部署
 - 对象 如何使用 dict keys **getitems**
 - 视图模型 如何使用 view——model
+- 运算符重载 def **add**(self, other):
+- 数组去重
 
 ### 项目初始化
 

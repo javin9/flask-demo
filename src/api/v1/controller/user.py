@@ -18,3 +18,10 @@ def get_user(uid):
 @auth.login_required
 def delete_user():
     return delete_user_by_id()
+
+
+@web_v1.route('/super/get_user', methods=['GET'])
+@auth.login_required
+def super_get_user(uid):
+    user_model = User().query.filter_by(id=uid).first_or_404()
+    return {"data": dict(user_model)}
